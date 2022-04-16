@@ -16,7 +16,7 @@ const showRetcipe = async function () {
     const id = window.location.hash.slice(1);
     if (!id) return;
     RetcipeView.spinner();
-    await models.loadRecipe(id);
+    await Promise.race([models.loadRecipe(id), timeout(5)]);
     RetcipeView.render(models.state.recipe);
   } catch (error) {
     alert(error);
@@ -26,13 +26,3 @@ const showRetcipe = async function () {
 ['load', 'hashchange'].forEach(val =>
   window.addEventListener(val, showRetcipe)
 );
-
-let funct = function () {
-  return new Promise(function (resolve) {
-    setTimeout(() => {
-      return resolve('ishlamadi');
-    }, 5000);
-  });
-};
-
-console.log(funct().then(res => console.log(res)));
